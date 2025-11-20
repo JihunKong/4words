@@ -27,6 +27,14 @@
             font-size: 1.2rem;
             flex-shrink: 0;
         }
+        /* 애니메이션 효과 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
@@ -40,17 +48,12 @@
 
         <!-- 상단 이미지 (파일명: top.png) -->
         <div class="bg-white pt-6 px-6 flex justify-center">
-            <!-- 
-                [이미지 파일명 안내]
-                컴퓨터에 있는 '2030 교실' 이미지 파일 이름을 'top.png'로 변경해서
-                깃허브에 업로드(Upload files) 해주세요.
-            -->
-            <img src="./top.png" alt="2030 교실" 
+            <img src="top.png" alt="2030 교실" 
                  onerror="this.style.display='none'; document.getElementById('top-alt').style.display='block';"
                  class="w-2/3 max-w-[200px] h-auto object-contain">
-            <!-- 이미지가 없을 때 대신 뜨는 텍스트 -->
             <div id="top-alt" style="display:none;" class="text-green-600 font-bold text-xl py-4">
-                2030 교실
+                2030 교실<br>
+                <span class="text-xs text-gray-400 font-normal">(이미지 로딩 중)</span>
             </div>
         </div>
 
@@ -70,12 +73,14 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-gray-500 mb-1">이름</label>
-                        <input type="text" id="name" required placeholder="홍길동" 
+                        <!-- 중요: name="name" 속성이 있어야 값이 전송됩니다 -->
+                        <input type="text" id="name" name="name" required placeholder="홍길동" 
                             class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-500 mb-1">연락처(뒤 4자리)</label>
-                        <input type="tel" id="phone" required placeholder="1234" maxlength="4" pattern="\d{4}"
+                        <!-- 중요: name="phone" 속성이 있어야 값이 전송됩니다 -->
+                        <input type="tel" id="phone" name="phone" required placeholder="1234" maxlength="4" pattern="\d{4}"
                             class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
                     </div>
                 </div>
@@ -114,15 +119,9 @@
 
                 <!-- 하단 이미지 (파일명: bottom.png) -->
                 <div class="flex justify-center pt-4 pb-2">
-                    <!-- 
-                        [이미지 파일명 안내]
-                        컴퓨터에 있는 '전남교육' 이미지 파일 이름을 'bottom.png'로 변경해서
-                        깃허브에 업로드(Upload files) 해주세요.
-                    -->
-                    <img src="./bottom.png" alt="전남교육 로고" 
+                    <img src="bottom.png" alt="전남교육 로고" 
                          onerror="this.style.display='none'; document.getElementById('bottom-alt').style.display='block';"
                          class="w-1/2 max-w-[150px] h-auto object-contain opacity-90">
-                    <!-- 이미지가 없을 때 대신 뜨는 텍스트 -->
                     <div id="bottom-alt" style="display:none;" class="text-gray-400 font-medium text-sm">
                         전남교육
                     </div>
@@ -152,7 +151,7 @@
         // ============================================================
         // [설정] 배포한 Google Apps Script 웹 앱 URL을 아래에 넣어주세요.
         // ============================================================
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx0iqhviaRL1jNfJxAaj8EP31T23b7KTnnGM396PFq1X3a2GsDKEMjiIQrUk2_txpTt/exec"; 
+        const SCRIPT_URL = "여기에_구글_앱스_스크립트_URL을_넣어주세요"; 
 
         const topics = {
             '2030': ['이', '공', '삼', '공'],
@@ -169,7 +168,7 @@
 
             chars.forEach((char, index) => {
                 const div = document.createElement('div');
-                div.className = 'flex items-center gap-3 animate-[fadeIn_0.3s_ease-in-out]';
+                div.className = 'flex items-center gap-3 animate-fade-in';
                 div.innerHTML = `
                     <div class="input-label-char shadow-sm">${char}</div>
                     <input type="text" name="line${index+1}" required 
@@ -198,8 +197,8 @@
             // 폼 데이터 수집
             const formData = new FormData(e.target);
             const data = {
-                name: formData.get('name'),
-                phone: formData.get('phone'),
+                name: formData.get('name'),   
+                phone: formData.get('phone'), 
                 topic: formData.get('topic'),
                 line1: formData.get('line1'),
                 line2: formData.get('line2'),
@@ -223,7 +222,6 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-                // GAS 특성상 no-cors 이슈 등이 있을 수 있으나 사용자 경험을 위해 성공 메시지 출력
                 alert('🎉 제출되었습니다!\n(개인정보는 시상 후 즉시 파기됩니다)');
                 document.getElementById('poemForm').reset();
             })
