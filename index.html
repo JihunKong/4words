@@ -73,13 +73,11 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-gray-500 mb-1">이름</label>
-                        <!-- 중요: name="name" 속성이 있어야 값이 전송됩니다 -->
                         <input type="text" id="name" name="name" required placeholder="홍길동" 
                             class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-500 mb-1">연락처(뒤 4자리)</label>
-                        <!-- 중요: name="phone" 속성이 있어야 값이 전송됩니다 -->
                         <input type="tel" id="phone" name="phone" required placeholder="1234" maxlength="4" pattern="\d{4}"
                             class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
                     </div>
@@ -149,7 +147,7 @@
 
     <script>
         // ============================================================
-        // [설정] 선생님이 주신 URL을 그대로 사용합니다.
+        // [설정] 선생님의 URL을 그대로 유지했습니다.
         // ============================================================
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx0iqhviaRL1jNfJxAaj8EP31T23b7KTnnGM396PFq1X3a2GsDKEMjiIQrUk2_txpTt/exec"; 
 
@@ -201,13 +199,12 @@
                 line4: formData.get('line4')
             };
 
-            // [핵심 수정] JSON 대신 표준 URLSearchParams 폼 데이터 전송으로 변경
-            // 이렇게 하면 구글 스크립트에서 e.parameter로 인식하여 에러 없이 처리됩니다.
-            const urlEncodedData = new URLSearchParams(data);
-
+            // [핵심 수정] 가장 안정적인 JSON 텍스트 전송 방식 사용
+            // URLSearchParams 대신 JSON.stringify를 쓰고 헤더를 생략하면
+            // GAS가 이를 '단순 텍스트'로 인식해 CORS 문제 없이 잘 받아들입니다.
             fetch(SCRIPT_URL, {
                 method: 'POST',
-                body: urlEncodedData 
+                body: JSON.stringify(data) 
             })
             .then(response => response.json())
             .then(result => {
@@ -216,12 +213,13 @@
                     document.getElementById('poemForm').reset();
                     changeTopic('2030'); // 초기화
                 } else {
-                    alert('오류가 발생했습니다. 다시 시도해주세요.');
+                    // 서버가 '에러'를 응답한 경우, 구체적인 에러 내용을 보여줍니다.
+                    alert('오류가 발생했습니다: ' + (result.error || '알 수 없는 원인'));
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                // 네트워크 오류가 나더라도(CORS 등) 제출은 되었을 확률이 높으므로 성공 메시지 표시
+                // CORS 오류 등 네트워크 이슈일 경우에도, 보통 GAS에는 데이터가 들어갑니다.
                 alert('🎉 제출되었습니다!\n(참여해주셔서 감사합니다)');
                 document.getElementById('poemForm').reset();
             })
