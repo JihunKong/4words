@@ -38,10 +38,20 @@
             <p class="text-sm mt-1 font-light relative z-10 opacity-90">모바일 사행시 백일장</p>
         </div>
 
-        <!-- 상단 이미지 (2030 교실) -->
+        <!-- 상단 이미지 (파일명: top.png) -->
         <div class="bg-white pt-6 px-6 flex justify-center">
-            <!-- 깃허브에 이미지 파일을 함께 올려주세요 -->
-            <img src="./image_2cfc1b.png" alt="2030 교실" class="w-2/3 max-w-[200px] h-auto object-contain">
+            <!-- 
+                [이미지 파일명 안내]
+                컴퓨터에 있는 '2030 교실' 이미지 파일 이름을 'top.png'로 변경해서
+                깃허브에 업로드(Upload files) 해주세요.
+            -->
+            <img src="./top.png" alt="2030 교실" 
+                 onerror="this.style.display='none'; document.getElementById('top-alt').style.display='block';"
+                 class="w-2/3 max-w-[200px] h-auto object-contain">
+            <!-- 이미지가 없을 때 대신 뜨는 텍스트 -->
+            <div id="top-alt" style="display:none;" class="text-green-600 font-bold text-xl py-4">
+                2030 교실
+            </div>
         </div>
 
         <!-- 본문 -->
@@ -70,7 +80,7 @@
                     </div>
                 </div>
                 
-                <!-- 개인정보 활용 동의 문구 (추가됨) -->
+                <!-- 개인정보 활용 동의 문구 -->
                 <div class="flex items-start gap-2 text-xs text-gray-500 bg-gray-100 p-2 rounded">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -102,10 +112,20 @@
                     <!-- 자바스크립트로 생성됩니다 -->
                 </div>
 
-                <!-- 하단 이미지 (JOEE 전남교육) -->
+                <!-- 하단 이미지 (파일명: bottom.png) -->
                 <div class="flex justify-center pt-4 pb-2">
-                    <!-- 깃허브에 이미지 파일을 함께 올려주세요 -->
-                    <img src="./image_2cfec4.png" alt="전남교육 로고" class="w-1/2 max-w-[150px] h-auto object-contain opacity-90">
+                    <!-- 
+                        [이미지 파일명 안내]
+                        컴퓨터에 있는 '전남교육' 이미지 파일 이름을 'bottom.png'로 변경해서
+                        깃허브에 업로드(Upload files) 해주세요.
+                    -->
+                    <img src="./bottom.png" alt="전남교육 로고" 
+                         onerror="this.style.display='none'; document.getElementById('bottom-alt').style.display='block';"
+                         class="w-1/2 max-w-[150px] h-auto object-contain opacity-90">
+                    <!-- 이미지가 없을 때 대신 뜨는 텍스트 -->
+                    <div id="bottom-alt" style="display:none;" class="text-gray-400 font-medium text-sm">
+                        전남교육
+                    </div>
                 </div>
 
                 <!-- 제출 버튼 -->
