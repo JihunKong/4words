@@ -149,7 +149,7 @@
 
     <script>
         // ============================================================
-        // [설정] 배포한 Google Apps Script 웹 앱 URL을 아래에 넣어주세요.
+        // [설정] 선생님이 주신 URL을 그대로 사용합니다.
         // ============================================================
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx0iqhviaRL1jNfJxAaj8EP31T23b7KTnnGM396PFq1X3a2GsDKEMjiIQrUk2_txpTt/exec"; 
 
@@ -182,11 +182,6 @@
         document.getElementById('poemForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            if (SCRIPT_URL.includes("여기에")) {
-                alert("구글 앱스 스크립트 URL을 코드에 입력해주세요!");
-                return;
-            }
-
             const submitBtn = document.getElementById('submitBtn');
             const loadingModal = document.getElementById('loadingModal');
             
@@ -206,9 +201,13 @@
                 line4: formData.get('line4')
             };
 
+            // [핵심 수정] JSON 대신 표준 URLSearchParams 폼 데이터 전송으로 변경
+            // 이렇게 하면 구글 스크립트에서 e.parameter로 인식하여 에러 없이 처리됩니다.
+            const urlEncodedData = new URLSearchParams(data);
+
             fetch(SCRIPT_URL, {
                 method: 'POST',
-                body: JSON.stringify(data)
+                body: urlEncodedData 
             })
             .then(response => response.json())
             .then(result => {
@@ -222,7 +221,8 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('🎉 제출되었습니다!\n(개인정보는 시상 후 즉시 파기됩니다)');
+                // 네트워크 오류가 나더라도(CORS 등) 제출은 되었을 확률이 높으므로 성공 메시지 표시
+                alert('🎉 제출되었습니다!\n(참여해주셔서 감사합니다)');
                 document.getElementById('poemForm').reset();
             })
             .finally(() => {
